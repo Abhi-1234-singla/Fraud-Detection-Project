@@ -1,2 +1,16 @@
-/fraud_detection_model.pkl
-/FraudDataset.csv
+# datasets
+*.csv
+data/
+
+# models
+*.pkl
+*.joblib
+
+# python cache
+__pycache__/
+
+# notebook checkpoints
+.ipynb_checkpoints/
+
+# virtual env
+venv/
