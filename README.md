@@ -1,4 +1,4 @@
-# Fraud Detection Project
+# Intelligent Financial Fraud Detection System
 
 ## Overview
 This project focuses on identifying fraudulent transactions within a financial dataset. It includes data exploration, feature analysis, preprocessing, and the training of a machine learning classification model to flag transactions as legitimate or fraudulent.
