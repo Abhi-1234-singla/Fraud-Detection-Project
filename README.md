@@ -1,27 +1,67 @@
-# Intelligent Financial Fraud Detection System
+# AI-Powered Fraud Detection System
 
-## Overview
-This project focuses on identifying fraudulent transactions within a financial dataset. It includes data exploration, feature analysis, preprocessing, and the training of a machine learning classification model to flag transactions as legitimate or fraudulent.
+A full-stack fintech dashboard for real-time fraud detection using machine learning.
 
-## Technologies Used
-- **Programming Language**: Python 3
-- **Data Manipulation & Analysis**: Pandas, NumPy
-- **Data Visualization**: Matplotlib, Seaborn
-- **Machine Learning**: Scikit-Learn (`LogisticRegression`, `Pipeline`, `ColumnTransformer`, `StandardScaler`, `OneHotEncoder`)
-- **Environment**: Jupyter Notebook / Google Colab
+## Features
 
-## Key Features
-- **Exploratory Data Analysis (EDA)**: Analyzes and visualizes the distribution of transaction types, transaction amounts, and their correlations with fraud occurrences.
-- **Data Preprocessing**: Uses a Scikit-Learn pipeline to scale numerical features (`StandardScaler`) and encode categorical variables (`OneHotEncoder`).
-- **Modeling**: Implements a `LogisticRegression` classifier with `class_weight="balanced"` to effectively handle the highly imbalanced nature of the fraud dataset.
+- **Real-time Prediction**: Process transactions and get instant fraud probability.
+- **Machine Learning Integration**: Loads a trained scikit-learn model via joblib/pickle.
+- **Dashboard Analytics**: Visualizes risk distribution and daily trends.
+- **Modern Fintech UI**: Responsive design with TailwindCSS and Framer Motion.
+- **Dark Mode**: Fully supported beautiful dark theme.
 
-## Project Structure
-- `analysis_mode.ipynb`: The main Jupyter Notebook containing the data exploration, preprocessing, and modeling pipeline.
-- `FraudDataset.csv`: The raw dataset containing financial transactions (expected in the working directory).
-- `fraud_detection_model.pkl`: A serialized export of the trained machine learning model.
+## Tech Stack
 
-## How to Run
-1. Ensure you have Python installed along with the necessary libraries (`pandas`, `numpy`, `matplotlib`, `seaborn`, `scikit-learn`).
-2. Open the `analysis_mode.ipynb` notebook in your preferred environment (e.g., Jupyter Notebook, JupyterLab, or Google Colab).
-3. Ensure the `FraudDataset.csv` dataset is located in the correct directory as referenced in the notebook.
-4. Run the cells sequentially to reproduce the exploratory data analysis and train the model.
+- **Frontend**: React, Vite, TailwindCSS, Recharts, Framer Motion
+- **Backend**: FastAPI (Python), Uvicorn, Pydantic
+- **Database**: MongoDB (Motor async driver)
+- **ML**: Scikit-Learn, Pandas
+
+## Setup Instructions
+
+### 1. Backend Setup
+
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
+2. Create a virtual environment (optional but recommended):
+   ```bash
+   python -m venv venv
+   source venv/bin/activate # Windows: venv\Scripts\activate
+   ```
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. Set up Environment Variables:
+   Edit `backend/.env` with your MongoDB Atlas URI:
+   ```env
+   MONGO_URI=mongodb+srv://<username>:<password>@cluster...
+   ```
+5. Run the server:
+   ```bash
+   uvicorn main:app --reload
+   ```
+   The backend will run on `http://localhost:8000`.
+
+### 2. Frontend Setup
+
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Run the development server:
+   ```bash
+   npm run dev
+   ```
+   The frontend will be available at `http://localhost:5173`.
+
+## Environment Variables
+
+- **Backend**: `MONGO_URI` (MongoDB Connection String)
+- **Frontend**: `VITE_API_URL` (Default is `http://localhost:8000/api`)
