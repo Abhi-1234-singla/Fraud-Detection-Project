@@ -1,35 +1,24 @@
 from fastapi import APIRouter, HTTPException, Depends
 from database.mongodb import get_db
+from utils.auth_utils import get_current_user
 from typing import List
 import datetime
 
 router = APIRouter()
 
-@router.get("/transactions")
-async def get_transactions(limit: int = 50, db = Depends(get_db)):
-    try:
-        cursor = db["transactions"].find().sort("timestamp", -1).limit(limit)
-        transactions = []
-        async for doc in cursor:
-            doc["_id"] = str(doc["_id"])
-            if "timestamp" in doc and isinstance(doc["timestamp"], datetime.datetime):
-                doc["timestamp"] = doc["timestamp"].isoformat()
-            transactions.append(doc)
-        return transactions
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
 @router.get("/dashboard-stats")
-async def get_dashboard_stats(db = Depends(get_db)):
+async def get_dashboard_stats(db = Depends(get_db), current_user: dict = Depends(get_current_user)):
     try:
-        total = await db["transactions"].count_documents({})
-        fraud_count = await db["transactions"].count_documents({"prediction": "Fraudulent"})
-        safe_count = await db["transactions"].count_documents({"prediction": "Safe"})
+        user_id = current_user["user_id"]
+        
+        total = await db["transactions"].count_documents({"user_id": user_id})
+        fraud_count = await db["transactions"].count_documents({"user_id": user_id, "prediction": "Fraudulent"})
+        safe_count = await db["transactions"].count_documents({"user_id": user_id, "prediction": "Safe"})
         
         # Risk distribution
-        high_risk = await db["transactions"].count_documents({"risk_level": "High"})
-        medium_risk = await db["transactions"].count_documents({"risk_level": "Medium"})
-        low_risk = await db["transactions"].count_documents({"risk_level": "Low"})
+        high_risk = await db["transactions"].count_documents({"user_id": user_id, "risk_level": "High"})
+        medium_risk = await db["transactions"].count_documents({"user_id": user_id, "risk_level": "Medium"})
+        low_risk = await db["transactions"].count_documents({"user_id": user_id, "risk_level": "Low"})
         
         # We can simulate daily stats using recent transactions if there are not enough historical records
         # For a production dashboard, we'd use MongoDB aggregation framework

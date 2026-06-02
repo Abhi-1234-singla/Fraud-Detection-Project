@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routes import predict, analytics
+from routes import predict, analytics, auth
 import uvicorn
 from dotenv import load_dotenv
 
@@ -18,8 +18,10 @@ app.add_middleware(
 )
 
 # Include Routers
+app.include_router(auth.router, prefix="/api/auth", tags=["Auth"])
 app.include_router(predict.router, prefix="/api", tags=["Predict"])
 app.include_router(analytics.router, prefix="/api", tags=["Analytics"])
+
 
 @app.get("/")
 def read_root():

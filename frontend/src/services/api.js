@@ -1,27 +1,36 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+const API_URL = 'http://localhost:8000/api';
 
 const api = axios.create({
   baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
-export const predictFraud = async (data) => {
-  const response = await api.post('/predict', data);
-  return response.data;
+// Interceptor to add JWT token to requests
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Auth endpoints
+export const authService = {
+  login: (email, password) => api.post('/auth/login', { email, password }),
+  signup: (name, email, password) => api.post('/auth/signup', { name, email, password }),
 };
 
-export const getTransactions = async (limit = 50) => {
-  const response = await api.get(`/transactions?limit=${limit}`);
-  return response.data;
-};
-
-export const getDashboardStats = async () => {
-  const response = await api.get('/dashboard-stats');
-  return response.data;
+// Prediction & Analytics endpoints
+export const fraudService = {
+  predict: (data) => api.post('/predict', data),
+  getHistory: () => api.get('/history'),
+  getDashboardStats: () => api.get('/dashboard-stats'),
 };
 
 export default api;

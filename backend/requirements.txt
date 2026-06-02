@@ -8,4 +8,8 @@ numpy
 joblib
 python-dotenv
 pydantic
+pydantic[email]
 xgboost
+passlib[bcrypt]
+python-jose[cryptography]
+python-multipart
