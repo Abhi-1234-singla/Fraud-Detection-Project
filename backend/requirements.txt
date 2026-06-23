@@ -10,6 +10,6 @@ python-dotenv
 pydantic
 pydantic[email]
 xgboost
-passlib[bcrypt]
+bcrypt
 python-jose[cryptography]
 python-multipart

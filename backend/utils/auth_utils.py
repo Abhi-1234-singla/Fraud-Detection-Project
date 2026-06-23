@@ -1,7 +1,7 @@
 import os
 from datetime import datetime, timedelta
 from typing import Optional
-from passlib.context import CryptContext
+import bcrypt
 from jose import jwt, JWTError # using jose instead of pyjwt because passlib typically uses jose in modern FastAPI
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
@@ -11,14 +11,18 @@ SECRET_KEY = os.getenv("JWT_SECRET_KEY", "09d25e094faa6ca2556c818166b7a9563b93f7
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # 7 days
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    password_byte_enc = plain_password.encode('utf-8')
+    hashed_password_byte_enc = hashed_password.encode('utf-8')
+    return bcrypt.checkpw(password_byte_enc, hashed_password_byte_enc)
 
-def get_password_hash(password):
-    return pwd_context.hash(password)
+def get_password_hash(password: str) -> str:
+    pwd_bytes = password.encode('utf-8')
+    salt = bcrypt.gensalt()
+    hashed_password = bcrypt.hashpw(password=pwd_bytes, salt=salt)
+    return hashed_password.decode('utf-8')
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
